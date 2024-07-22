@@ -38,6 +38,19 @@ class DatabaseHelper {
           '''
         );
 
+        await db.execute(
+          '''
+          CREATE TABLE products(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT,
+            description TEXT,
+            price REAL,
+            old_price REAL,
+            image TEXT
+          )
+          '''
+        );
+
         // Insert default admin user
         await db.insert('users', {
           'phone': 123456789,    // Số điện thoại admin mặc định
@@ -65,6 +78,7 @@ class DatabaseHelper {
     }
     return null;
   }
+
   Future<List<Map<String, dynamic>>> getProducts() async {
     Database db = await database;
     return await db.query('products');

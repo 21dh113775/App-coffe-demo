@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import '../data/databasehelper.dart';
 
-class HomePage extends StatefulWidget {
+class ProductPage extends StatefulWidget {
   @override
-  _HomePageState createState() => _HomePageState();
+  _ProductPageState createState() => _ProductPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _ProductPageState extends State<ProductPage> {
   final dbHelper = DatabaseHelper();
 
   Future<List<Map<String, dynamic>>> _fetchProducts() async {
@@ -17,21 +17,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.list),
-            onPressed: () {
-              Navigator.pushNamed(context, '/products');
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.admin_panel_settings),
-            onPressed: () {
-              Navigator.pushNamed(context, '/admin');
-            },
-          ),
-        ],
+        title: Text('Products'),
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: _fetchProducts(),

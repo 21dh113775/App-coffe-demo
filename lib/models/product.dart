@@ -3,6 +3,7 @@ class Product {
   final String name;
   final String description;
   final double price;
+  final double oldPrice;
   final String imageUrl;
 
   Product({
@@ -10,6 +11,7 @@ class Product {
     required this.name,
     required this.description,
     required this.price,
+    required this.oldPrice,
     required this.imageUrl,
   });
 
@@ -19,7 +21,8 @@ class Product {
       'name': name,
       'description': description,
       'price': price,
-      'imageUrl': imageUrl,
+      'old_price': oldPrice,
+      'image': imageUrl,
     };
   }
 
@@ -29,7 +32,8 @@ class Product {
       name: map['name'],
       description: map['description'],
       price: map['price'],
-      imageUrl: map['imageUrl'],
+      oldPrice: map['old_price'],
+      imageUrl: map['image'],
     );
   }
 }
