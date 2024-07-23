@@ -21,7 +21,7 @@ class DatabaseHelper {
     String path = join(await getDatabasesPath(), 'app.db');
 
     // Xóa cơ sở dữ liệu cũ (chỉ nên dùng trong quá trình phát triển)
-    await deleteDatabase(path);
+    //await deleteDatabase(path);
 
     return await openDatabase(
       path,

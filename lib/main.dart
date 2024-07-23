@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import './data/databasehelper.dart';
-import './pages/home.dart';
+import 'main_screen.dart';
+import 'pages/Users/home.dart';
 import './pages/login.dart';
 import './pages/signup.dart';
 import './pages/Admin/admin_homescreen.dart';
 import 'pages/Admin/Product/admin_add_product.dart';
 import 'pages/Admin/Product/admin_product.dart';
-import 'pages/product_pages.dart';
+import 'pages/Users/product_pages.dart';
+import 'pages/Users/cart_page.dart';
+
 
 void main() {
   runApp(MyApp());
@@ -24,12 +27,12 @@ class MyApp extends StatelessWidget {
       routes: {
         '/login': (context) => LoginPage(),
         '/register': (context) => RegisterPage(),
-        '/home': (context) => HomePage(),
+        '/home': (context) => MainScreen(),
         '/admin_screen': (context) => AdminHomeScreen(),
         '/products': (context) => ProductPage(),
         '/admin_product': (context) => AdminProductPage(),
         '/addProduct': (context) => AddProductPage(),
       },
     );
-  } 
+  }
 }
