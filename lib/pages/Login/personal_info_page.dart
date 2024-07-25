@@ -5,10 +5,10 @@ import '../Users/proflie/profile_pages.dart';
 class PersonalInfoPage extends StatefulWidget {
   final int phone;
 
-  PersonalInfoPage({required this.phone});
+  const PersonalInfoPage({super.key, required this.phone});
 
   @override
-  _PersonalInfoPageState createState() => _PersonalInfoPageState();
+  State<PersonalInfoPage> createState() => _PersonalInfoPageState();
 }
 
 class _PersonalInfoPageState extends State<PersonalInfoPage> {
@@ -55,7 +55,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => ProfilePages(),
+            builder: (context) => ProfilePages(phone: widget.phone,),
             settings: RouteSettings(arguments: widget.phone),
           ),
         );

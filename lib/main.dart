@@ -16,7 +16,6 @@ import 'pages/Admin/Product/admin_add_product.dart';
 import 'pages/Admin/Product/admin_product.dart';
 import 'pages/Users/Product/product_pages.dart';
 import 'pages/Users/Cart/cart_page.dart';
-import 'pages/Users/proflie/update_profile.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,7 +25,8 @@ void main() async {
   await dbHelper.database;
 
   // In ra thông báo để biết cơ sở dữ liệu đã được tạo lại
-  print("Cơ sở dữ liệu đã được tạo lại với version 1."); // Initialize the database
+  print(
+      "Cơ sở dữ liệu đã được tạo lại với version 1."); // Initialize the database
   runApp(MyApp());
 }
 
@@ -41,21 +41,25 @@ class MyApp extends StatelessWidget {
       home: LoginPage(),
       routes: {
         '/login': (context) => LoginPage(),
-        '/personal_info': (context) => PersonalInfoPage(phone: ModalRoute.of(context)!.settings.arguments as int? ?? 0),
-
+        '/personal_info': (context) => PersonalInfoPage(
+            phone: ModalRoute.of(context)!.settings.arguments as int? ?? 0),
         '/register': (context) => RegisterPage(),
         '/admin_screen': (context) => AdminHomeScreen(),
         '/products': (context) => ProductPage(),
         '/admin_product': (context) => AdminProductPage(),
         '/addProduct': (context) => AddProductPage(),
         '/admin_user_management': (context) => AdminUserManagementPage(),
-        '/admin_inventory_management': (context) => AdminInventoryManagementPage(),
-        '/admin_promotion_management': (context) => AdminPromotionManagementPage(),
+        '/admin_inventory_management': (context) =>
+            AdminInventoryManagementPage(),
+        '/admin_promotion_management': (context) =>
+            AdminPromotionManagementPage(),
         '/admin_order_management': (context) => AdminOrderManagementPage(),
-        '/admin_financial_management': (context) => AdminFinancialManagementPage(),
+        '/admin_financial_management': (context) =>
+            AdminFinancialManagementPage(),
         '/home': (context) => HomePage(),
         '/cart': (context) => CartPage(),
-        '/main_screen': (context) => MainScreen(),
+        '/main_screen': (context) => MainScreen(
+            phone: ModalRoute.of(context)!.settings.arguments as int? ?? 0),
         '/admin_category': (context) => CategoriesPage(),
       },
     );

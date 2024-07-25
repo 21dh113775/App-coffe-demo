@@ -7,23 +7,26 @@ import 'pages/Users/proflie/profile_pages.dart';
 import 'pages/bottom_navigation.dart';
 
 class MainScreen extends StatefulWidget {
+  final int phone;
+  const MainScreen({super.key, required this.phone});
   @override
-  _MainScreenState createState() => _MainScreenState();
+  State<MainScreen> createState() => _MainScreenState();
 }
 
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
 
-  final List<Widget> _pages = [
-    HomePage(),
-    ProductPage(),
-    CartPage(),
-    VoucherPage(),
-    ProfilePages(),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final List<Widget> _pages = [
+      HomePage(),
+      ProductPage(),
+      CartPage(),
+      VoucherPage(),
+      ProfilePages(
+        phone: widget.phone,
+      ),
+    ];
     return Scaffold(
       body: IndexedStack(
         index: _currentIndex,

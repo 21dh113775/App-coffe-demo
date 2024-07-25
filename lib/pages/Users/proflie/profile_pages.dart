@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../../../data/databasehelper.dart';
 
 class ProfilePages extends StatefulWidget {
+  final int phone;
+  const ProfilePages({super.key, required this.phone});
   @override
   _ProfilePagesState createState() => _ProfilePagesState();
 }
@@ -10,15 +12,14 @@ class _ProfilePagesState extends State<ProfilePages> {
   Map<String, dynamic>? _userInfo;
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  void initState() {
+    super.initState();
     _loadUserInfo();
   }
 
  Future<void> _loadUserInfo() async {
-  final phone = ModalRoute.of(context)!.settings.arguments as int;
   DatabaseHelper dbHelper = DatabaseHelper();
-  final userInfo = await dbHelper.getUserByPhone(phone);
+  final userInfo = await dbHelper.getUserByPhone(widget.phone);
   setState(() {
     _userInfo = userInfo;
   });
