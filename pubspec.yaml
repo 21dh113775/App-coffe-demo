@@ -38,6 +38,12 @@ dependencies:
   sqflite: ^2.3.3+1
   path: ^1.9.0
   path_provider: ^2.1.3
+  cached_network_image: ^3.3.1
+  shared_preferences: ^2.2.3
+  intl: ^0.19.0
+  provider: ^6.1.2
+  riverpod: any
+  flutter_bloc: ^8.1.6
 
 dev_dependencies:
   flutter_test:
@@ -60,7 +66,19 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
-
+  assets:
+    - assets/logo.png
+    - assets/logo2.png
+    - assets/drink.png
+    - assets/profile.png
+    - assets/banner1.png
+    - assets/banner2.jpg
+    - assets/giohang.png
+    - assets/giaohang.png
+    - assets/laytannoi.png
+    - assets/forgot_password.png
+    - assets/hat_sen.png
+    - assets/logoAdmin.png
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:test_login_sqlite/pages/Users/voucher.dart';
 import '../pages/Users/home.dart';
-import '../pages/Users/cart_page.dart';
-import '../pages/Users/product_pages.dart';
-import 'pages/Users/profile_pages.dart';
+import 'pages/Users/Cart/cart_page.dart';
+import 'pages/Users/Product/product_pages.dart';
+import 'pages/Users/proflie/profile_pages.dart';
 import 'pages/bottom_navigation.dart';
 
 class MainScreen extends StatefulWidget {
@@ -17,7 +18,8 @@ class _MainScreenState extends State<MainScreen> {
     HomePage(),
     ProductPage(),
     CartPage(),
-    ProfilePage(),
+    VoucherPage(),
+    ProfilePages(),
   ];
 
   @override

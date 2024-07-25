@@ -12,19 +12,23 @@ class BottomNavigation extends StatelessWidget {
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: Icon(Icons.home),
-          label: 'Home',
+          label: 'trang chủ',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.local_drink),
-          label: 'Product Page',
+          label: 'Đặt nước',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.shopping_cart),
-          label: 'Cart',
+          label: 'Giỏ hàng',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.card_giftcard),
+          label: 'Ưu đãi',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.person),
-          label: 'Profile',
+          label: 'Cá nhân',
         ),
       ],
       currentIndex: currentIndex,

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-class ProfilePage extends StatelessWidget {
+class VoucherPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profile'),
+        title: Text('Voucher'),
       ),
       body: Center(
-        child: Text('Profile details go here'),
+        child: Text('no user Voucher'),
       ),
     );
   }

@@ -21,6 +21,14 @@ class _AdminBottomNavigationState extends State<AdminBottomNavigation> {
     return BottomNavigationBar(
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
+          icon: Icon(Icons.home),
+          label: 'Trang chủ',
+        ),
+         BottomNavigationBarItem(
+          icon: Icon(Icons.category),
+          label: 'Quản lý loại sản phẩm',
+        ),
+        BottomNavigationBarItem(
           icon: Icon(Icons.production_quantity_limits),
           label: 'Quản lý sản phẩm',
         ),
@@ -46,7 +54,7 @@ class _AdminBottomNavigationState extends State<AdminBottomNavigation> {
         ),
       ],
       currentIndex: widget.currentIndex,
-      selectedItemColor: Colors.amber[800],
+      selectedItemColor: Color.fromARGB(255, 5, 150, 25),
       unselectedItemColor: Colors.grey,
       onTap: _onItemTapped,
     );
