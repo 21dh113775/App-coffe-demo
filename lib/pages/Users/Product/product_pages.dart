@@ -63,7 +63,7 @@ class _ProductPageState extends State<ProductPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.white, // Đổi màu nền AppBar thành màu trắng
         title: Center(
           child: Image.asset(
             'assets/logo2.png',
@@ -79,7 +79,7 @@ class _ProductPageState extends State<ProductPage> {
                 Expanded(
                   child: TextField(
                     decoration: InputDecoration(
-                      hintText: 'Bạn muốn tìm gì?',
+                      hintText: 'Shaker muốn tìm gì?',
                       prefixIcon: Icon(Icons.search),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(25),
@@ -129,7 +129,7 @@ class _ProductPageState extends State<ProductPage> {
               padding: const EdgeInsets.all(8.0),
               child: Text(
                 selectedCategory!,
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.yellow[700]), // Đổi màu chữ danh mục thành màu vàng
               ),
             ),
           Expanded(
@@ -229,19 +229,18 @@ class _ProductPageState extends State<ProductPage> {
     );
   }
 
-
   IconData _getIconForCategory(String categoryName) {
     switch (categoryName.toLowerCase()) {
       case 'trà sữa':
-        return Icons.local_cafe;
+        return Icons.local_drink;
       case 'coffee':
-        return Icons.coffee;
+        return Icons.local_cafe;
       case 'trà trái cây':
-        return Icons.emoji_food_beverage;
+        return Icons.free_breakfast;
       case 'best seller':
         return Icons.star;
       case 'topping':
-        return Icons.add_circle_outline;
+        return Icons.icecream;
       default:  
         return Icons.category;
     }
