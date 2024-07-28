@@ -14,6 +14,20 @@ class _ProductPageState extends State<ProductPage> {
   String? selectedCategory;
   String _searchQuery = '';
   int _cartItemCount = 0;
+  
+
+  final List<IconData> categoryIcons = [
+    Icons.local_cafe,
+    Icons.coffee,
+    Icons.emoji_food_beverage,
+    Icons.star,
+    Icons.add_circle_outline,
+    Icons.local_drink,
+    Icons.fastfood,
+    Icons.icecream,
+    Icons.local_pizza,
+    Icons.cake
+  ];
 
   @override
   void initState() {
@@ -204,7 +218,7 @@ class _ProductPageState extends State<ProductPage> {
                     child: Column(
                       children: [
                         Icon(
-                          _getIconForCategory(category['name']),
+                          categoryIcons[index % categoryIcons.length],
                           color: selectedCategory == category['name'] ? Colors.green : Colors.grey,
                           size: 30,
                         ),
@@ -229,85 +243,114 @@ class _ProductPageState extends State<ProductPage> {
     );
   }
 
-  IconData _getIconForCategory(String categoryName) {
-    switch (categoryName.toLowerCase()) {
-      case 'trà sữa':
-        return Icons.local_drink;
-      case 'coffee':
-        return Icons.local_cafe;
-      case 'trà trái cây':
-        return Icons.free_breakfast;
-      case 'best seller':
-        return Icons.star;
-      case 'topping':
-        return Icons.icecream;
-      default:  
-        return Icons.category;
-    }
-  }
-
-  Widget _buildProductItem(BuildContext context, Map<String, dynamic> product) {
-    return Container(
-      child: GestureDetector(
-        onTap: () => _navigateToProductDetail(context, product),
+ Widget _buildProductItem(BuildContext context, Map<String, dynamic> product) {
+  return LayoutBuilder(
+    builder: (context, constraints) {
+      return GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ProductDetailPage(product: product),
+            ),
+          );
+        },
         child: Card(
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          elevation: 5,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
-                  child: Image.network(
-                    product['image'] ?? '',
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) => Center(child: Icon(Icons.error)),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              ClipRRect(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
+                child: Stack(
                   children: [
-                    Text(
-                      product['name'] ?? '',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
+                    Image.network(
+                      product['image'] ?? '',
+                      height: constraints.maxHeight * 0.6,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
                     ),
-                    SizedBox(height: 4),
-                    Text(
-                      '${_formatCurrency(product['price'] ?? 0.0)}',
-                      style: TextStyle(
-                        color: Colors.green,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
+                    Positioned(
+                      top: 10,
+                      left: 10,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.8),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Text(
+                          product['brand'] ?? '',
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: IconButton(
-                  icon: Icon(Icons.add_circle, color: Colors.green, size: 28),
-                  onPressed: () async {
-                    await dbHelper.addToCart(product['id']);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Đã thêm vào giỏ hàng')),
-                    );
-                    _updateCartItemCount();
-                  },
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          product['name'] ?? '',
+                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '${_formatCurrency(product['price'] ?? 0.0)}',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.green,
+                                  ),
+                                ),
+                                if (product['old_price'] != null)
+                                  Text(
+                                    '${_formatCurrency(product['old_price'] ?? 0.0)}',
+                                    style: TextStyle(
+                                      decoration: TextDecoration.lineThrough,
+                                      color: Colors.grey,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () async {
+                              await dbHelper.addToCart(product['id']);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Đã thêm vào giỏ hàng')),
+                              );
+                              _updateCartItemCount();
+                            },
+                            child: Icon(Icons.add_circle, color: Colors.green, size: 24),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
           ),
         ),
-      ),
-    );
-  }
+      );
+    }
+  );
+} 
 }

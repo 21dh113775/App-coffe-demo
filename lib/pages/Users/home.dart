@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:riverpod/riverpod.dart';
 import '../../data/databasehelper.dart';
 import 'Product/product_detail_pages.dart';
+import 'Product/product_pages.dart'; // Thêm import cho ProductPage
 
 class HomePage extends StatelessWidget {
   final dbHelper = DatabaseHelper();
@@ -22,6 +23,16 @@ class HomePage extends StatelessWidget {
       ),
     );
   }
+
+  // Thêm hàm điều hướng đến ProductPage
+void _navigateToProductPage(BuildContext context) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => ProductPage(),
+    ),
+  );
+}
 
   String _formatCurrency(double amount) {
     final formatCurrency = NumberFormat.currency(locale: 'vi_VN', symbol: '₫');
@@ -91,8 +102,8 @@ class HomePage extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 20),
-                // Best Seller Section
-                const Row(
+                // Best Seller Section với nút "Xem tất cả" đã được sửa đổi
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
@@ -102,12 +113,14 @@ class HomePage extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    Text(
-                      'Xem tất cả',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.blue,
-                       
+                    GestureDetector(
+                      onTap: () => _navigateToProductPage(context), // Sửa đổi để truyền danh sách sản phẩm
+                      child: Text(
+                        'Xem tất cả',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.blue,
+                        ),
                       ),
                     ),
                   ],
@@ -115,14 +128,14 @@ class HomePage extends StatelessWidget {
                 const SizedBox(height: 10),
                 // Best Seller Products
                 SizedBox(
-                  height: 250, // Adjust the height based on your design
+                  height: 250,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: products.length,
                     itemBuilder: (context, index) {
                       final product = products[index];
                       return Container(
-                        width: MediaQuery.of(context).size.width / 2.5, // Adjust the width based on your design
+                        width: MediaQuery.of(context).size.width / 2.5,
                         margin: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: GestureDetector(
                           onTap: () => _navigateToProductDetail(context, product),
