@@ -2,20 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:test_login_sqlite/data/databasehelper.dart';
 
+// ignore: must_be_immutable
 class CartPage extends StatefulWidget {
+  CartPage({super.key, required this.cartItems});
+  Future<List<Map<String, dynamic>>> cartItems;
+
   @override
-  _CartPageState createState() => _CartPageState();
+  State<CartPage> createState() => _CartPageState();
 }
 
 class _CartPageState extends State<CartPage> {
-  late Future<List<Map<String, dynamic>>> _cartItems;
-
-  @override
-  void initState() {
-    super.initState();
-    _cartItems = DatabaseHelper().getCartItems();
-  }
-
   String _formatCurrency(double amount) {
     final formatCurrency = NumberFormat.currency(locale: 'vi_VN', symbol: '₫');
     return formatCurrency.format(amount);
@@ -23,7 +19,7 @@ class _CartPageState extends State<CartPage> {
 
   void _updateCart() {
     setState(() {
-      _cartItems = DatabaseHelper().getCartItems();
+      widget.cartItems = DatabaseHelper().getCartItems();
     });
   }
 
@@ -31,10 +27,10 @@ class _CartPageState extends State<CartPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Giỏ Hàng'),
+        title: const Text('Giỏ Hàng'),
         actions: [
           IconButton(
-            icon: Icon(Icons.delete_forever),
+            icon: const Icon(Icons.delete_forever),
             onPressed: () async {
               await DatabaseHelper().clearCart();
               _updateCart();
@@ -43,18 +39,18 @@ class _CartPageState extends State<CartPage> {
         ],
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: _cartItems,
+        future: widget.cartItems,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Lỗi: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('Giỏ hàng của bạn đang trống'));
+            return const Center(child: Text('Giỏ hàng của bạn đang trống'));
           } else {
             final cartItems = snapshot.data!;
             return ListView.builder(
-              padding: EdgeInsets.all(10),
+              padding: const EdgeInsets.all(10),
               itemCount: cartItems.length,
               itemBuilder: (context, index) {
                 final item = cartItems[index];
@@ -69,7 +65,8 @@ class _CartPageState extends State<CartPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             item['image'] != null
-                                ? Image.network(item['image'], width: 70, height: 70, fit: BoxFit.cover)
+                                ? Image.network(item['image'],
+                                    width: 70, height: 70, fit: BoxFit.cover)
                                 : Icon(Icons.image, size: 70),
                             SizedBox(width: 10),
                             Expanded(
@@ -78,28 +75,37 @@ class _CartPageState extends State<CartPage> {
                                 children: [
                                   Text(
                                     item['name'] ?? 'Tên sản phẩm',
-                                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16),
                                   ),
                                   SizedBox(height: 5),
                                   Text('Số lượng: ${item['quantity']}'),
                                   Row(
                                     children: [
                                       IconButton(
-                                        icon: Icon(Icons.remove_circle, color: Colors.red),
+                                        icon: Icon(Icons.remove_circle,
+                                            color: Colors.red),
                                         onPressed: () async {
                                           if (item['quantity'] > 1) {
-                                            await DatabaseHelper().updateCartQuantity(item['id'], item['quantity'] - 1);
+                                            await DatabaseHelper()
+                                                .updateCartQuantity(item['id'],
+                                                    item['quantity'] - 1);
                                           } else {
-                                            await DatabaseHelper().removeFromCart(item['id']);
+                                            await DatabaseHelper()
+                                                .removeFromCart(item['id']);
                                           }
                                           _updateCart();
                                         },
                                       ),
                                       Text('${item['quantity']}'),
                                       IconButton(
-                                        icon: Icon(Icons.add_circle, color: Colors.green),
+                                        icon: Icon(Icons.add_circle,
+                                            color: Colors.green),
                                         onPressed: () async {
-                                          await DatabaseHelper().updateCartQuantity(item['id'], item['quantity'] + 1);
+                                          await DatabaseHelper()
+                                              .updateCartQuantity(item['id'],
+                                                  item['quantity'] + 1);
                                           _updateCart();
                                         },
                                       ),
@@ -114,13 +120,16 @@ class _CartPageState extends State<CartPage> {
                               children: [
                                 Text(
                                   'Giá: ${_formatCurrency(item['price'] ?? 0.0)}',
-                                  style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
+                                  style: TextStyle(
+                                      color: Colors.green,
+                                      fontWeight: FontWeight.bold),
                                 ),
                                 SizedBox(height: 5),
                                 IconButton(
                                   icon: Icon(Icons.delete, color: Colors.red),
                                   onPressed: () async {
-                                    await DatabaseHelper().removeFromCart(item['id']);
+                                    await DatabaseHelper()
+                                        .removeFromCart(item['id']);
                                     _updateCart();
                                   },
                                 ),

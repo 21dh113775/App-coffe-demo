@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:test_login_sqlite/data/databasehelper.dart';
 import 'package:test_login_sqlite/pages/Users/voucher.dart';
 import '../pages/Users/home.dart';
 import 'pages/Users/Cart/cart_page.dart';
@@ -18,10 +19,10 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> _pages = [
+    final List<Widget> pages = [
       HomePage(),
       ProductPage(),
-      CartPage(),
+      CartPage(cartItems:  DatabaseHelper().getCartItems()),
       VoucherPage(),
       ProfilePages(
         phone: widget.phone,
@@ -30,7 +31,7 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       body: IndexedStack(
         index: _currentIndex,
-        children: _pages,
+        children: pages,
       ),
       bottomNavigationBar: BottomNavigation(
         currentIndex: _currentIndex,

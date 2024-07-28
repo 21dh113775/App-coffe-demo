@@ -4,7 +4,11 @@ class BottomNavigation extends StatelessWidget {
   final int currentIndex;
   final Function(int) onItemTapped;
 
-  BottomNavigation({required this.currentIndex, required this.onItemTapped});
+  const BottomNavigation({
+    super.key,
+    required this.currentIndex,
+    required this.onItemTapped,
+  });
 
   @override
   Widget build(BuildContext context) {

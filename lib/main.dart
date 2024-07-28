@@ -57,7 +57,9 @@ class MyApp extends StatelessWidget {
         '/admin_financial_management': (context) =>
             AdminFinancialManagementPage(),
         '/home': (context) => HomePage(),
-        '/cart': (context) => CartPage(),
+        '/cart': (context) => CartPage(
+              cartItems: DatabaseHelper().getCartItems(),
+            ),
         '/main_screen': (context) => MainScreen(
             phone: ModalRoute.of(context)!.settings.arguments as int? ?? 0),
         '/admin_category': (context) => CategoriesPage(),

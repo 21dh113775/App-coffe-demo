@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:riverpod/riverpod.dart';
 import '../../data/databasehelper.dart';
 import 'Product/product_detail_pages.dart';
 

@@ -23,13 +23,15 @@ class _ProductPageState extends State<ProductPage> {
 
   Future<List<Map<String, dynamic>>> _fetchProducts() async {
     if (selectedCategory != null && selectedCategory!.isNotEmpty) {
-      return await dbHelper.getProductsByCategory(selectedCategory!, searchQuery: _searchQuery);
+      return await dbHelper.getProductsByCategory(selectedCategory!,
+          searchQuery: _searchQuery);
     } else {
       return await dbHelper.getProducts(searchQuery: _searchQuery);
     }
   }
 
-  void _navigateToProductDetail(BuildContext context, Map<String, dynamic> product) {
+  void _navigateToProductDetail(
+      BuildContext context, Map<String, dynamic> product) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -42,7 +44,9 @@ class _ProductPageState extends State<ProductPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => CartPage(),
+        builder: (context) => CartPage(
+          cartItems: DatabaseHelper().getCartItems(),
+        ),
       ),
     ).then((_) => _updateCartItemCount());
   }
@@ -95,27 +99,27 @@ class _ProductPageState extends State<ProductPage> {
                     },
                   ),
                 ),
-                SizedBox(width: 8),
-                Stack(
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.shopping_cart, color: Colors.black),
-                      onPressed: () => _navigateToCart(context),
-                    ),
-                    if (_cartItemCount > 0)
-                      Positioned(
-                        right: 0,
-                        child: CircleAvatar(
-                          radius: 10,
-                          backgroundColor: Colors.red,
-                          child: Text(
-                            '$_cartItemCount',
-                            style: TextStyle(fontSize: 12, color: Colors.white),
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
+                // SizedBox(width: 8),
+                // Stack(
+                //   children: [
+                //     IconButton(
+                //       icon: Icon(Icons.shopping_cart, color: Colors.black),
+                //       onPressed: () => _navigateToCart(context),
+                //     ),
+                //     if (_cartItemCount > 0)
+                //       Positioned(
+                //         right: 0,
+                //         child: CircleAvatar(
+                //           radius: 10,
+                //           backgroundColor: Colors.red,
+                //           child: Text(
+                //             '$_cartItemCount',
+                //             style: TextStyle(fontSize: 12, color: Colors.white),
+                //           ),
+                //         ),
+                //       ),
+                //   ],
+                // ),
               ],
             ),
           ),
@@ -150,7 +154,8 @@ class _ProductPageState extends State<ProductPage> {
                         final products = snapshot.data!;
                         return GridView.builder(
                           padding: EdgeInsets.all(10),
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
                             childAspectRatio: 0.75,
                             crossAxisSpacing: 10,
@@ -205,7 +210,9 @@ class _ProductPageState extends State<ProductPage> {
                       children: [
                         Icon(
                           _getIconForCategory(category['name']),
-                          color: selectedCategory == category['name'] ? Colors.green : Colors.grey,
+                          color: selectedCategory == category['name']
+                              ? Colors.green
+                              : Colors.grey,
                           size: 30,
                         ),
                         SizedBox(height: 2),
@@ -213,7 +220,9 @@ class _ProductPageState extends State<ProductPage> {
                           category['name'],
                           style: TextStyle(
                             fontSize: 10,
-                            color: selectedCategory == category['name'] ? Colors.green : Colors.black,
+                            color: selectedCategory == category['name']
+                                ? Colors.green
+                                : Colors.black,
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -229,7 +238,6 @@ class _ProductPageState extends State<ProductPage> {
     );
   }
 
-
   IconData _getIconForCategory(String categoryName) {
     switch (categoryName.toLowerCase()) {
       case 'trà sữa':
@@ -242,7 +250,7 @@ class _ProductPageState extends State<ProductPage> {
         return Icons.star;
       case 'topping':
         return Icons.add_circle_outline;
-      default:  
+      default:
         return Icons.category;
     }
   }
@@ -265,7 +273,8 @@ class _ProductPageState extends State<ProductPage> {
                   child: Image.network(
                     product['image'] ?? '',
                     fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) => Center(child: Icon(Icons.error)),
+                    errorBuilder: (context, error, stackTrace) =>
+                        Center(child: Icon(Icons.error)),
                   ),
                 ),
               ),
@@ -276,7 +285,8 @@ class _ProductPageState extends State<ProductPage> {
                   children: [
                     Text(
                       product['name'] ?? '',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
