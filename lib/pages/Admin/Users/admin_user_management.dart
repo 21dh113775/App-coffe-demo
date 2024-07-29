@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../widget/admin_bottom_navigation.dart';
 import '../widget/custom_drawer.dart';
 import '../../../data/databasehelper.dart'; // Import DatabaseHelper
 
@@ -65,78 +64,6 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
     );
   }
 
-  void _showEditUserDialog(Map<String, dynamic> user) {
-    final _phoneController = TextEditingController(text: user['phone'].toString());
-    final _passwordController = TextEditingController(text: user['password']);
-    bool _isAdmin = user['isAdmin'] == 1;
-
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Chỉnh sửa người dùng', style: TextStyle(fontWeight: FontWeight.bold)),
-          content: SingleChildScrollView(
-            child: Column(
-              children: [
-                TextField(
-                  controller: _phoneController,
-                  decoration: InputDecoration(
-                    labelText: 'Số điện thoại',
-                    border: OutlineInputBorder(),
-                  ),
-                  keyboardType: TextInputType.phone,
-                ),
-                SizedBox(height: 10),
-                TextField(
-                  controller: _passwordController,
-                  decoration: InputDecoration(
-                    labelText: 'Mật khẩu',
-                    border: OutlineInputBorder(),
-                  ),
-                  obscureText: true,
-                ),
-                SizedBox(height: 10),
-                SwitchListTile(
-                  title: Text('Quyền Admin'),
-                  value: _isAdmin,
-                  onChanged: (value) {
-                    setState(() {
-                      _isAdmin = value;
-                    });
-                  },
-                ),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('Hủy', style: TextStyle(color: Colors.grey)),
-            ),
-            TextButton(
-              onPressed: () async {
-                final updatedUser = {
-                  'id': user['id'],
-                  'phone': int.parse(_phoneController.text),
-                  'password': _passwordController.text,
-                  'isAdmin': _isAdmin ? 1 : 0,
-                };
-                await dbHelper.updateUser(updatedUser);
-                setState(() {
-                  _usersFuture = _fetchUsers();
-                });
-                Navigator.of(context).pop();
-              },
-              child: Text('Lưu', style: TextStyle(color: Colors.blue)),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -164,25 +91,54 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
                       final user = users[index];
                       return Card(
                         margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                        child: ListTile(
-                          title: Text('Số điện thoại: ${user['phone']}', style: TextStyle(fontWeight: FontWeight.bold)),
-                          subtitle: Text(user['isAdmin'] == 1 ? 'Admin' : 'Người dùng'),
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              IconButton(
-                                icon: Icon(Icons.edit, color: Colors.blue),
-                                onPressed: () {
-                                  _showEditUserDialog(user);
-                                },
-                              ),
-                              IconButton(
-                                icon: Icon(Icons.delete, color: Colors.red),
-                                onPressed: () {
-                                  _showDeleteConfirmationDialog(user['id']);
-                                },
-                              ),
-                            ],
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              '/update_user', // Đường dẫn đến trang chỉnh sửa
+                              arguments: {
+                                'id': user['id'],
+                                'name': user['name'] ?? '',
+                                'phone': user['phone']?.toString() ?? '',
+                                'password': user['password'] ?? '',
+                                'isAdmin': user['isAdmin'] ?? 0,
+                                'email': user['email'] ?? '',
+                                'address': user['address'] ?? '',
+                                'dateOfBirth': user['dateOfBirth'] ?? '',
+                                'gender': user['gender'] ?? 'Male',
+                                'imageUrl': user['imageUrl'] ?? '',
+                              }, // Truyền thông tin người dùng sang trang chỉnh sửa
+                            );
+                          },
+                          child: ListTile(
+                            leading: user['imageUrl'] != null && user['imageUrl'].isNotEmpty
+                                ? Image.network(
+                                    user['imageUrl'],
+                                    width: 50,
+                                    height: 50,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Icon(Icons.error);
+                                    },
+                                  )
+                                : CircleAvatar(
+                                    child: Icon(Icons.person),
+                                  ),
+                            title: Text('Số điện thoại: ${user['phone']}', style: TextStyle(fontWeight: FontWeight.bold)),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(user['name'] ?? 'Tên không có'),
+                                Text(user['address'] ?? 'Địa chỉ không có'),
+                                Text(user['gender'] ?? 'Giới tính không có'),
+                                Text(user['isAdmin'] == 1 ? 'Admin' : 'Người dùng'),
+                              ],
+                            ),
+                            trailing: IconButton(
+                              icon: Icon(Icons.delete, color: Colors.red),
+                              onPressed: () {
+                                _showDeleteConfirmationDialog(user['id']);
+                              },
+                            ),
                           ),
                         ),
                       );
@@ -195,7 +151,6 @@ class _AdminUserManagementPageState extends State<AdminUserManagementPage> with 
         },
       ),
       drawer: CustomDrawer(),
-   
     );
   }
 }

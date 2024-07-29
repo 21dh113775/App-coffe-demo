@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../data/databasehelper.dart';
+import 'Cart/cart_page.dart';
 import 'Product/product_detail_pages.dart';
+import 'Product/product_pages.dart';
+ // Import CartPage
 
 class HomePage extends StatelessWidget {
   final dbHelper = DatabaseHelper();
@@ -20,9 +23,25 @@ class HomePage extends StatelessWidget {
     );
   }
 
+  void _navigateToProductPage(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ProductPage(),
+      ),
+    );
+  }
+
   String _formatCurrency(double amount) {
     final formatCurrency = NumberFormat.currency(locale: 'vi_VN', symbol: '₫');
     return formatCurrency.format(amount);
+  }
+
+  Future<void> _addToCart(BuildContext context, Map<String, dynamic> product) async {
+    await dbHelper.addToCart(product['id']);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Đã thêm vào giỏ hàng')),
+    );
   }
 
   @override
@@ -57,7 +76,6 @@ class HomePage extends StatelessWidget {
             return ListView(
               padding: const EdgeInsets.all(16.0),
               children: [
-                // Banner
                 Container(
                   height: 180,
                   decoration: BoxDecoration(
@@ -69,7 +87,6 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-                // Options
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -88,8 +105,7 @@ class HomePage extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 20),
-                // Best Seller Section
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
@@ -99,27 +115,28 @@ class HomePage extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    Text(
-                      'Xem tất cả',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.blue,
-                       
+                    GestureDetector(
+                      onTap: () => _navigateToProductPage(context),
+                      child: Text(
+                        'Xem tất cả',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.blue,
+                        ),
                       ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 10),
-                // Best Seller Products
                 SizedBox(
-                  height: 250, // Adjust the height based on your design
+                  height: 250,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: products.length,
                     itemBuilder: (context, index) {
                       final product = products[index];
                       return Container(
-                        width: MediaQuery.of(context).size.width / 2.5, // Adjust the width based on your design
+                        width: MediaQuery.of(context).size.width / 2.5,
                         margin: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: GestureDetector(
                           onTap: () => _navigateToProductDetail(context, product),
@@ -130,6 +147,7 @@ class HomePage extends StatelessWidget {
                             _formatCurrency(product['price'] ?? 0.0),
                             product['old_price'] != null ? _formatCurrency(product['old_price']) : null,
                             product['description'] ?? '',
+                            () => _addToCart(context, product), // Thêm hàm để thêm vào giỏ hàng
                           ),
                         ),
                       );
@@ -144,7 +162,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget productCard(BuildContext context, String image, String name, String price, String? oldPrice, String description) {
+  Widget productCard(BuildContext context, String image, String name, String price, String? oldPrice, String description, VoidCallback onAddToCart) {
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
@@ -199,11 +217,7 @@ class HomePage extends StatelessWidget {
             alignment: Alignment.bottomRight,
             child: IconButton(
               icon: Icon(Icons.add_circle, color: Colors.green),
-              onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Đã thêm vào giỏ hàng')),
-                );
-              },
+              onPressed: onAddToCart,
             ),
           ),
         ],

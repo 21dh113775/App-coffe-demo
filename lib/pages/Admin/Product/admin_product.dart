@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:intl/intl.dart'; // Import thư viện intl
+import 'package:intl/intl.dart';
 import '../../../data/databasehelper.dart';
 import '../widget/custom_drawer.dart';
 import 'admin_add_product.dart';
-import 'update_product.dart'; // Import trang cập nhật
+import 'update_product.dart';
 
 class AdminProductPage extends StatefulWidget {
   @override
@@ -35,9 +35,39 @@ class _AdminProductPageState extends State<AdminProductPage> {
     );
     if (result == true) {
       setState(() {
-        _productsFuture = _fetchProducts(); // Refresh the product list
+        _productsFuture = _fetchProducts();
       });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Sản phẩm đã được thêm thành công')),
+      );
     }
+  }
+
+  void _navigateToUpdateProductPage(Map<String, dynamic> product) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => UpdateProductPage(product: product),
+      ),
+    );
+    if (result == true) {
+      setState(() {
+        _productsFuture = _fetchProducts();
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Sản phẩm đã được cập nhật thành công')),
+      );
+    }
+  }
+
+  void _deleteProduct(int productId) async {
+    await dbHelper.deleteProduct(productId);
+    setState(() {
+      _productsFuture = _fetchProducts();
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Sản phẩm đã được xóa thành công')),
+    );
   }
 
   @override
@@ -46,7 +76,9 @@ class _AdminProductPageState extends State<AdminProductPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Quản lý sản phẩm'),
+        title: Text('Quản lý sản phẩm' , style: TextStyle(color: Colors.white),),
+        backgroundColor: Color.fromARGB(255, 51, 51, 51),
+        elevation: 0,
       ),
       body: Stack(
         children: [
@@ -56,7 +88,7 @@ class _AdminProductPageState extends State<AdminProductPage> {
                 future: _categoriesFuture,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return CircularProgressIndicator();
+                    return LinearProgressIndicator();
                   } else if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -79,6 +111,9 @@ class _AdminProductPageState extends State<AdminProductPage> {
                                     _selectedCategoryId = selected ? category['id'] : null;
                                   });
                                 },
+                                selectedColor: Color.fromARGB(255, 255, 186, 48),
+                                backgroundColor: Colors.grey[200],
+                                labelStyle: TextStyle(color: _selectedCategoryId == category['id'] ? Colors.white : Colors.black),
                               ),
                             );
                           }).toList(),
@@ -109,55 +144,36 @@ class _AdminProductPageState extends State<AdminProductPage> {
                         itemBuilder: (context, index) {
                           final product = filteredProducts[index];
                           return Card(
-                            child: ListTile(
-                              leading: CachedNetworkImage(
-                                imageUrl: product['image'],
-                                height: 50,
-                                width: 50,
-                                fit: BoxFit.cover,
-                                placeholder: (context, url) => CircularProgressIndicator(),
-                                errorWidget: (context, url, error) => Icon(Icons.error),
-                              ),
-                              title: Text(product['name']),
-                              subtitle: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text('Giá: ${currencyFormatter.format(product['price'])}'),
-                                  Text(
-                                    'Giá cũ: ${currencyFormatter.format(product['old_price'])}',
-                                    style: TextStyle(decoration: TextDecoration.lineThrough),
-                                  ),
-                                ],
-                              ),
-                              trailing: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  IconButton(
-                                    icon: Icon(Icons.edit),
-                                    onPressed: () async {
-                                      final result = await Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => UpdateProductPage(product: product),
-                                        ),
-                                      );
-                                      if (result == true) {
-                                        setState(() {
-                                          _productsFuture = _fetchProducts(); // Refresh the product list
-                                        });
-                                      }
-                                    },
-                                  ),
-                                  IconButton(
-                                    icon: Icon(Icons.delete),
-                                    onPressed: () async {
-                                      await dbHelper.deleteProduct(product['id']);
-                                      setState(() {
-                                        _productsFuture = _fetchProducts(); // Refresh the product list
-                                      });
-                                    },
-                                  ),
-                                ],
+                            margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                            elevation: 4,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                            child: InkWell(
+                              onTap: () => _navigateToUpdateProductPage(product),
+                              child: ListTile(
+                                contentPadding: EdgeInsets.all(16.0),
+                                leading: CachedNetworkImage(
+                                  imageUrl: product['image'],
+                                  height: 50,
+                                  width: 50,
+                                  fit: BoxFit.cover,
+                                  placeholder: (context, url) => CircularProgressIndicator(),
+                                  errorWidget: (context, url, error) => Icon(Icons.error),
+                                ),
+                                title: Text(product['name'], style: TextStyle(fontWeight: FontWeight.bold)),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text('Giá: ${currencyFormatter.format(product['price'])}', style: TextStyle(color: Colors.teal)),
+                                    Text(
+                                      'Giá cũ: ${currencyFormatter.format(product['old_price'])}',
+                                      style: TextStyle(decoration: TextDecoration.lineThrough, color: Colors.red),
+                                    ),
+                                  ],
+                                ),
+                                trailing: IconButton(
+                                  icon: Icon(Icons.delete, color: Colors.red),
+                                  onPressed: () => _deleteProduct(product['id']),
+                                ),
                               ),
                             ),
                           );
@@ -174,12 +190,14 @@ class _AdminProductPageState extends State<AdminProductPage> {
             right: 16,
             child: FloatingActionButton(
               onPressed: _navigateToAddProductPage,
+              backgroundColor: Color.fromARGB(255, 255, 255, 255),
               child: Icon(Icons.add),
             ),
           ),
         ],
       ),
       drawer: CustomDrawer(),
+      backgroundColor: Colors.grey[100],
     );
   }
 }

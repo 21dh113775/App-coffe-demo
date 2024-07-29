@@ -129,19 +129,27 @@ Future<int> _update(String table, Map<String, dynamic> row, String where, List<d
   print('Update result: $result');
   return result;
 }
+  // Tạo lại các bảng
 
   // Phương thức chung để truy vấn dữ liệu
   Future<List<Map<String, dynamic>>> _query(String table, {String? where, List<dynamic>? whereArgs}) async {
     Database db = await database;
     return await db.query(table, where: where, whereArgs: whereArgs);
   }
-
+Future<void> deleteDatabase() async {
+  String path = join(await getDatabasesPath(), 'users.db');
+  await databaseFactory.deleteDatabase(path);
+}
   // Phương thức chung để xóa dữ liệu
   Future<int> _delete(String table, String where, List<dynamic> whereArgs) async {
     Database db = await database;
     return await db.delete(table, where: where, whereArgs: whereArgs);
   }
-
+// Quản lý ưu đãi
+  Future<int> insertPromotion(Map<String, dynamic> row) => _insert('promotions', row);
+  Future<int> updatePromotion(Map<String, dynamic> promotion) => _update('promotions', promotion, 'id = ?', [promotion['id']]);
+  Future<int> deletePromotion(int id) => _delete('promotions', 'id = ?', [id]);
+  Future<List<Map<String, dynamic>>> getPromotions() => _query('promotions');
   // Quản lý người dùng
   Future<int> insertUser(Map<String, dynamic> row) => _insert('users', row);
   Future<int> updateUser(Map<String, dynamic> user) => _update('users', user, 'phone = ?', [user['phone']]);
@@ -230,8 +238,8 @@ Future<int> _update(String table, Map<String, dynamic> row, String where, List<d
     await db.rawDelete('DROP TABLE IF EXISTS $table'); // Xóa bảng
   }
 
-  // Tạo lại các bảng
-  await _onCreate(db, 4); // Tạo lại các bảng với version 4
+
+  await _onCreate(db, 1 ); // Tạo lại các bảng với version 4
 }
 
 }

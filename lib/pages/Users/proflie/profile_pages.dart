@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:test_login_sqlite/pages/Login/login.dart';
 import '../../../data/databasehelper.dart';
+ // Import your login page here
 
 class ProfilePages extends StatefulWidget {
   final int phone;
@@ -17,14 +19,21 @@ class _ProfilePagesState extends State<ProfilePages> {
     _loadUserInfo();
   }
 
- Future<void> _loadUserInfo() async {
-  DatabaseHelper dbHelper = DatabaseHelper();
-  final userInfo = await dbHelper.getUserByPhone(widget.phone);
-  setState(() {
-    _userInfo = userInfo;
-  });
-}
+  Future<void> _loadUserInfo() async {
+    DatabaseHelper dbHelper = DatabaseHelper();
+    final userInfo = await dbHelper.getUserByPhone(widget.phone);
+    setState(() {
+      _userInfo = userInfo;
+    });
+  }
 
+  void _logout() {
+    // Add your logout logic here
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => LoginPage()), // Navigate to login page
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +61,19 @@ class _ProfilePagesState extends State<ProfilePages> {
                   _buildInfoTile('Ngày sinh', _userInfo!['dateOfBirth']),
                   _buildInfoTile('Giới tính', _userInfo!['gender']),
                   _buildInfoTile('Số điện thoại', _userInfo!['phone'].toString()),
+                  SizedBox(height: 40),
+                  Center(
+                    child: ElevatedButton.icon(
+                      onPressed: _logout,
+                      icon: Icon(Icons.logout),
+                      label: Text('Đăng xuất'),
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white, backgroundColor: Colors.red,
+                        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                        textStyle: TextStyle(fontSize: 16),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),

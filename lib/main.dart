@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:test_login_sqlite/pages/Admin/Users/update_user.dart';
 import 'data/databasehelper.dart';
 import 'main_screen.dart';
 import 'pages/Admin/Categories/categories_page.dart';
@@ -52,10 +53,8 @@ class MyApp extends StatelessWidget {
         '/admin_inventory_management': (context) =>
             AdminInventoryManagementPage(),
         '/admin_promotion_management': (context) =>
-            AdminPromotionManagementPage(),
+            ManagePromotionsPage(),
         '/admin_order_management': (context) => AdminOrderManagementPage(),
-        '/admin_financial_management': (context) =>
-            AdminFinancialManagementPage(),
         '/home': (context) => HomePage(),
         '/cart': (context) => CartPage(
               cartItems: DatabaseHelper().getCartItems(),
@@ -63,6 +62,8 @@ class MyApp extends StatelessWidget {
         '/main_screen': (context) => MainScreen(
             phone: ModalRoute.of(context)!.settings.arguments as int? ?? 0),
         '/admin_category': (context) => CategoriesPage(),
+        '/admin_finance':(context) => AdminFinanPage(),
+         '/update_user': (context) => UpdateUserPage(user: ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>),
       },
     );
   }

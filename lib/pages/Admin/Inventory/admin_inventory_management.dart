@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../widget/admin_bottom_navigation.dart';
+
 import '../widget/custom_drawer.dart';
 
 class AdminInventoryManagementPage extends StatelessWidget {
@@ -12,12 +12,6 @@ class AdminInventoryManagementPage extends StatelessWidget {
       ),
       body: Center(
         child: Text('Đây là trang quản lý kho'),
-      ),
-      bottomNavigationBar: AdminBottomNavigation(
-        currentIndex: 2,
-        onItemTapped: (index) {
-          // Handle navigation here
-        },
       ),
       drawer: CustomDrawer(),
     );
